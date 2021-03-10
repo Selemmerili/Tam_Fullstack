@@ -6,27 +6,6 @@ import os.path
 from os import path
 
 
-if path.exists("station_file_1.py"):
-    pass
-else:
-    f = open("station_file_1.py", "w+")
-    f.write("result1 = []" + "\n")
-    f.close()
-
-if path.exists("station_file_2.py"):
-    pass
-else:
-    f = open("station_file_2.py", "w+")
-    f.write("result2 = []" + "\n")
-    f.close()
-
-if path.exists("station_file_3.py"):
-    pass
-else:
-    f = open("station_file_3.py", "w+")
-    f.write("result3 = []" + "\n")
-    f.close()
-
 
 def load_csv(path, cursor):
     """ This function load and read the csv file, and insert row in db file.
@@ -97,6 +76,7 @@ def create_schema(cursor):
     "Horaire"	TEXT,
     "Ville" TEXT
     );""")
+    
 
 def stations():
     conn = sqlite3.connect('transport.db')
@@ -106,54 +86,55 @@ def stations():
     result = []
     for row in c.fetchall():
         result.append(dict(row))
-    f = open("station_file_1.py", "w+")
-    str_result = repr(result)
-    f.write("result1 = " + str_result + "\n")
-    f.close()
-    #print(result)
+
     return result
 
-#print(stations('transport.db',.cursor(), 'JACOU'))
+
+def Ligne():
+    conn = sqlite3.connect('transport.db')
+    c = conn.cursor()
+    c.row_factory= sqlite3.Row
+    c.execute("""SELECT Ligne FROM infoarret """)
+    result = []
+    for row in c.fetchall():
+        if dict(row) not in result or not result:
+            result.append(dict(row))
+    return (result)
+
+
+
 def next_transports(station):
     conn = sqlite3.connect('transport.db')
     c = conn.cursor()
     c.row_factory= sqlite3.Row
     c.execute("""SELECT Station,Direction,Ligne,Horaire FROM infoarret WHERE Station = ? """,
-    (station,))
+    (station.upper(),))
     result_1 = []
     for row in c.fetchall():
         result_1.append(dict(row))
-    f = open("station_file_2.py", "w+")
-    str_result = repr(result_1)
-    f.write("result2 = " + str_result + "\n")
-    f.close()
-    #print(result_1)
     return result_1
-#print(next_transports("JACOU"))
+
+def ligne_search(ligne):
+    conn = sqlite3.connect('transport.db')
+    c = conn.cursor()
+    c.row_factory= sqlite3.Row
+    c.execute("""SELECT Station FROM infoarreT WHERE Ligne = ? """,
+    (ligne,))
+    result = []
+    for row in c.fetchall():
+        if dict(row) not in result or not result:
+            result.append(dict(row))
+    return result           
 
 def next_line_station_direction(args1,args2,args3):
     conn = sqlite3.connect('transport.db')
     c = conn.cursor()
     c.row_factory= sqlite3.Row
-    c.execute("""SELECT * FROM infoarret WHERE Ligne=? AND Station=? AND Direction=? ORDER BY Horaire""",(args1,args2,args3,))
+    c.execute("""SELECT * FROM infoarret WHERE Ligne=? AND Station=? AND Direction=? ORDER BY Horaire""",(args1,args2.upper(),args3.upper(),))
     result =[]
     for i in c.fetchall():
         result.append(dict(i))
-    f = open("station_file_3.py", "w+")
-    str_result = repr(result)
-    f.write("result3 = " + str_result + "\n")
-    f.close()
     return result
-
-    # def next_line_station_direction(line,station,direction):
-    # conn = sqlite3.connect('transport.db')
-    # c = conn.cursor()
-    # c.row_factory= sqlite3.Row
-    # c.execute("""SELECT * FROM infoarret WHERE Ligne=? AND Station=? AND Direction=? ORDER BY Horaire""",(line,station,direction,))
-    # result =[]
-    # for i in c.fetchall():
-    #     result.append(dict(i))
-    # return result
 
 
 
@@ -165,9 +146,6 @@ def main():
     update_db('https://data.montpellier3m.fr/sites/default/files/ressources/TAM_MMM_TpsReel.csv', 'Montpellier.csv')
     create_schema(c)
     load_csv('Montpellier.csv', c)
-    conn.commit()
-    stations()
-    next_transports('station')
     conn.commit()
 
 
