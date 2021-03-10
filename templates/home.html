@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% import "components.html" as components %}
+    {% block body %}
+    <script>
+
+        function getValue1(){
+            var x1 = document.getElementById('line').value;
+            var newlink1 = window.location.href + 'line/' +  x1;
+            window.location.replace(newlink1);
+        }
+        function getValue(){
+            var x = document.getElementById('foo').value;
+            var newlink = window.location.href + 'next/' +  x;
+            window.location.replace(newlink);
+        }
+        function SendValue(){
+            var line = document.getElementById('ligne').value;
+            var sta = document.getElementById('station').value;
+            var dir = document.getElementById('direction').value;
+            var newlink = window.location.href + 'next?Ligne=' +  line + '&Station=' +  sta + '&Direction=' + dir;
+
+            window.location.replace(newlink);
+        }
+        function show(){
+            var z = document.getElementById('show');
+            z.style.display = "block";
+            var z2 = document.getElementById('show2');
+            z2.style.display = "none";
+            var z2 = document.getElementById('show3');
+            z2.style.display = "none";
+        }
+        function show2(){
+            var z = document.getElementById('show2');
+            z.style.display = "block";
+            var z1 = document.getElementById('show3');
+            z1.style.display = "none";
+            var z1 = document.getElementById('show');
+            z1.style.display = "none";
+        }
+
+        function show3(){
+            var z = document.getElementById('show3');
+            z.style.display = "block";
+            var z3 = document.getElementById('show2');
+            z3.style.display = "none";
+            var z3 = document.getElementById('show');
+            z3.style.display = "none"
+
+        }
+
+    </script>
+    <section id="intro" class="wrapper style1 fullscreen fade-up">
+        <div class="inner">
+            <h1>Station-TAM</h1>
+            <p>Exploiter l’opendata des horaires de <br />
+                transports : version fullstack / par Abdulrahman, Sêlêm, Yanis</p>
+            <ul class="actions">
+                <li><a href="http://10.0.4.65:5000/stations" class="button scrolly">Liste Stations</a></li>
+                <li><a href="http://10.0.4.65:5000/line" class="button scrolly">All Lines</a></li>
+                <li><button onclick="show()" class="button scrolly">Passage List</button></li>
+                <li><button onclick="show2()" class="button scrolly">Search By Line-Station-Direction</a></li>
+                <li><button onclick="show3()" class="button scrolly">Search By Line</a></li>
+            
+            </ul>
+            <div id="show" style="display:none;">
+            Veuillez entrer une station ici : <input type="text" placeholder="Station" id="foo" value="" />
+            <button onclick="getValue()">Search</button>
+            </div>
+
+            <div id="show3" style="display:none;">
+                Veuillez entrer une station ici : <input type="text" placeholder="Line Number" id="line" value="" />
+                <button onclick="getValue1()">Search</button>
+                </div>  
+
+            <div id="show2" style="display:none;">
+
+                Veuillez entrer une station ici : 
+                <label for="ligne">Ligne</label>
+                <input type="text" placeholder="Line" id="ligne" />
+                <label for="station">Station</label>
+                <input type="text" placeholder="Station" id="station" />
+                <label for="direction">Direction</label>
+                <input type="text" placeholder="Destination" id="direction"/>
+                <button onclick="SendValue()">Search</button>
+                
+            </div>
+                   
+
+        </div>
+    </section>
+    {% endblock %}
